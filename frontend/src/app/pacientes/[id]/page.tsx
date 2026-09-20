@@ -22,6 +22,9 @@ const TABS: { key: Tab; label: string }[] = [
   { key: "agenda", label: "Agenda" },
 ];
 
+const inputClase =
+  "rounded-md border border-[var(--sonda-border)] bg-white px-3 py-2 text-sm text-[var(--sonda-ink)] outline-none focus:border-[var(--sonda-teal)]";
+
 export default function PacienteDetallePage() {
   const { id } = useParams<{ id: string }>();
 
@@ -133,8 +136,8 @@ export default function PacienteDetallePage() {
     }
   };
 
-  if (cargando) return <p className="text-sm text-zinc-500">Cargando...</p>;
-  if (error && !paciente) return <p className="text-sm text-red-600">{error}</p>;
+  if (cargando) return <p className="text-sm text-[var(--sonda-ink-faint)]">Cargando...</p>;
+  if (error && !paciente) return <p className="text-sm text-[var(--sonda-red)]">{error}</p>;
   if (!paciente) return null;
 
   const proximaCita = citas
@@ -144,22 +147,22 @@ export default function PacienteDetallePage() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
+        <h1 className="text-xl font-semibold text-[var(--sonda-ink)]">
           {paciente.nombres} {paciente.apellidos}
         </h1>
-        <p className="text-sm text-zinc-600 dark:text-zinc-400">
+        <p className="text-sm text-[var(--sonda-ink-soft)]">
           RUT {paciente.rut} · Nacimiento {paciente.fechaNacimiento} · {paciente.sexo}
         </p>
         {(paciente.telefono || paciente.email) && (
-          <p className="text-sm text-zinc-500">
+          <p className="text-sm text-[var(--sonda-ink-faint)]">
             {[paciente.telefono, paciente.email].filter(Boolean).join(" · ")}
           </p>
         )}
       </div>
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-[var(--sonda-red)]">{error}</p>}
 
-      <div className="flex flex-wrap gap-1 border-b border-zinc-200 dark:border-zinc-800">
+      <div className="flex flex-wrap gap-1 border-b border-[var(--sonda-border)]">
         {TABS.map((t) => (
           <button
             key={t.key}
@@ -167,8 +170,8 @@ export default function PacienteDetallePage() {
             onClick={() => setTab(t.key)}
             className={
               tab === t.key
-                ? "border-b-2 border-zinc-900 px-3 py-2 text-sm font-medium text-zinc-900 dark:border-zinc-50 dark:text-zinc-50"
-                : "border-b-2 border-transparent px-3 py-2 text-sm text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-300"
+                ? "border-b-2 border-[var(--sonda-teal)] px-3 py-2 text-sm font-medium text-[var(--sonda-teal-dark)]"
+                : "border-b-2 border-transparent px-3 py-2 text-sm text-[var(--sonda-ink-soft)] hover:text-[var(--sonda-ink)]"
             }
           >
             {t.label}
@@ -176,7 +179,7 @@ export default function PacienteDetallePage() {
         ))}
         <Link
           href={`/pacientes/${id}/periodontograma`}
-          className="border-b-2 border-transparent px-3 py-2 text-sm text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-300"
+          className="border-b-2 border-transparent px-3 py-2 text-sm text-[var(--sonda-ink-soft)] hover:text-[var(--sonda-ink)]"
         >
           Periodontograma ↗
         </Link>
@@ -184,21 +187,21 @@ export default function PacienteDetallePage() {
 
       {tab === "resumen" && (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          <div className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-800">
-            <p className="text-xs text-zinc-500">Ficha clínica</p>
-            <p className="mt-1 text-sm font-medium text-zinc-900 dark:text-zinc-50">
+          <div className="rounded-[10px] border border-[var(--sonda-border)] bg-[var(--sonda-surface)] p-4">
+            <p className="text-xs text-[var(--sonda-ink-faint)]">Ficha clínica</p>
+            <p className="mt-1 text-sm font-medium text-[var(--sonda-ink)]">
               {ficha ? "Registrada" : "Sin registrar"}
             </p>
           </div>
-          <div className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-800">
-            <p className="text-xs text-zinc-500">Odontograma</p>
-            <p className="mt-1 text-sm font-medium text-zinc-900 dark:text-zinc-50">
+          <div className="rounded-[10px] border border-[var(--sonda-border)] bg-[var(--sonda-surface)] p-4">
+            <p className="text-xs text-[var(--sonda-ink-faint)]">Odontograma</p>
+            <p className="mt-1 text-sm font-medium text-[var(--sonda-ink)]">
               {piezas.length} {piezas.length === 1 ? "pieza registrada" : "piezas registradas"}
             </p>
           </div>
-          <div className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-800">
-            <p className="text-xs text-zinc-500">Próxima cita</p>
-            <p className="mt-1 text-sm font-medium text-zinc-900 dark:text-zinc-50">
+          <div className="rounded-[10px] border border-[var(--sonda-border)] bg-[var(--sonda-surface)] p-4">
+            <p className="text-xs text-[var(--sonda-ink-faint)]">Próxima cita</p>
+            <p className="mt-1 text-sm font-medium text-[var(--sonda-ink)]">
               {proximaCita
                 ? new Date(proximaCita.fechaHora).toLocaleString("es-CL", { dateStyle: "medium", timeStyle: "short" })
                 : "Sin citas agendadas"}
@@ -208,35 +211,35 @@ export default function PacienteDetallePage() {
       )}
 
       {tab === "ficha" && (
-        <form onSubmit={guardarFicha} className="flex flex-col gap-3 rounded-lg border border-zinc-200 p-4 dark:border-zinc-800">
+        <form onSubmit={guardarFicha} className="flex flex-col gap-3 rounded-[10px] border border-[var(--sonda-border)] bg-[var(--sonda-surface)] p-4">
           <textarea
             placeholder="Antecedentes médicos"
             value={fichaForm.antecedentesMedicos}
             onChange={(e) => setFichaForm({ ...fichaForm, antecedentesMedicos: e.target.value })}
-            className="rounded border border-zinc-300 px-2 py-1.5 dark:border-zinc-700 dark:bg-zinc-900"
+            className={inputClase}
           />
           <textarea
             placeholder="Alergias"
             value={fichaForm.alergias}
             onChange={(e) => setFichaForm({ ...fichaForm, alergias: e.target.value })}
-            className="rounded border border-zinc-300 px-2 py-1.5 dark:border-zinc-700 dark:bg-zinc-900"
+            className={inputClase}
           />
           <textarea
             placeholder="Medicamentos actuales"
             value={fichaForm.medicamentosActuales}
             onChange={(e) => setFichaForm({ ...fichaForm, medicamentosActuales: e.target.value })}
-            className="rounded border border-zinc-300 px-2 py-1.5 dark:border-zinc-700 dark:bg-zinc-900"
+            className={inputClase}
           />
           <textarea
             placeholder="Observaciones"
             value={fichaForm.observaciones}
             onChange={(e) => setFichaForm({ ...fichaForm, observaciones: e.target.value })}
-            className="rounded border border-zinc-300 px-2 py-1.5 dark:border-zinc-700 dark:bg-zinc-900"
+            className={inputClase}
           />
           <button
             type="submit"
             disabled={guardandoFicha}
-            className="self-start rounded bg-zinc-900 px-3 py-2 text-sm font-medium text-white disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900"
+            className="self-start rounded-md bg-[var(--sonda-teal)] px-3 py-2 text-sm font-medium text-white disabled:opacity-50 hover:bg-[var(--sonda-teal-dark)]"
           >
             {guardandoFicha ? "Guardando..." : ficha ? "Actualizar ficha" : "Crear ficha"}
           </button>
@@ -247,47 +250,47 @@ export default function PacienteDetallePage() {
 
       {tab === "agenda" && (
         <div className="flex flex-col gap-3">
-          <form onSubmit={crearCita} className="grid grid-cols-1 gap-3 rounded-lg border border-zinc-200 p-4 sm:grid-cols-3 dark:border-zinc-800">
+          <form onSubmit={crearCita} className="grid grid-cols-1 gap-3 rounded-[10px] border border-[var(--sonda-border)] bg-[var(--sonda-surface)] p-4 sm:grid-cols-3">
             <input
               required
               placeholder="Profesional"
               value={citaForm.profesional}
               onChange={(e) => setCitaForm({ ...citaForm, profesional: e.target.value })}
-              className="rounded border border-zinc-300 px-2 py-1.5 dark:border-zinc-700 dark:bg-zinc-900"
+              className={inputClase}
             />
             <input
               required
               type="datetime-local"
               value={citaForm.fechaHora}
               onChange={(e) => setCitaForm({ ...citaForm, fechaHora: e.target.value })}
-              className="rounded border border-zinc-300 px-2 py-1.5 dark:border-zinc-700 dark:bg-zinc-900"
+              className={inputClase}
             />
             <input
               placeholder="Motivo (opcional)"
               value={citaForm.motivo}
               onChange={(e) => setCitaForm({ ...citaForm, motivo: e.target.value })}
-              className="rounded border border-zinc-300 px-2 py-1.5 dark:border-zinc-700 dark:bg-zinc-900"
+              className={inputClase}
             />
             <button
               type="submit"
               disabled={guardandoCita}
-              className="rounded bg-zinc-900 px-3 py-2 text-sm font-medium text-white disabled:opacity-50 sm:col-span-3 dark:bg-zinc-100 dark:text-zinc-900"
+              className="rounded-md bg-[var(--sonda-teal)] px-3 py-2 text-sm font-medium text-white disabled:opacity-50 sm:col-span-3 hover:bg-[var(--sonda-teal-dark)]"
             >
               {guardandoCita ? "Guardando..." : "Agendar cita"}
             </button>
           </form>
 
           {citas.length === 0 ? (
-            <p className="text-sm text-zinc-500">Sin citas registradas.</p>
+            <p className="text-sm text-[var(--sonda-ink-faint)]">Sin citas registradas.</p>
           ) : (
-            <ul className="divide-y divide-zinc-200 rounded-lg border border-zinc-200 dark:divide-zinc-800 dark:border-zinc-800">
+            <ul className="divide-y divide-[var(--sonda-border)] rounded-[10px] border border-[var(--sonda-border)] bg-[var(--sonda-surface)]">
               {citas.map((c) => (
                 <li key={c.id} className="flex items-center justify-between px-4 py-3">
-                  <span>
+                  <span className="text-[var(--sonda-ink)]">
                     {new Date(c.fechaHora).toLocaleString("es-CL")} · {c.profesional}
                     {c.motivo ? ` · ${c.motivo}` : ""}
                   </span>
-                  <span className="text-sm text-zinc-500">{c.estado}</span>
+                  <span className="text-sm text-[var(--sonda-ink-faint)]">{c.estado}</span>
                 </li>
               ))}
             </ul>

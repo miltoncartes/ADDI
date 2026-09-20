@@ -87,7 +87,7 @@ export default function PeriodontogramaPage() {
   if (!paciente) return <p className="text-sm text-red-600">{error ?? "Paciente no encontrado"}</p>;
 
   return (
-    <div className="sonda-theme -mx-6 rounded-2xl p-4 sm:p-5">
+    <div>
       <Link href={`/pacientes/${id}`} className="sonda-no-print mb-3 inline-block text-sm text-[var(--sonda-ink-soft)] hover:underline">
         ← {paciente.nombres} {paciente.apellidos}
       </Link>
