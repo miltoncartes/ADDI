@@ -1,6 +1,10 @@
 # Asistente Dental Digital Inteligente (ADDI)
 
-MVP en modo independiente (Fase 1) del asistente dental digital: odontograma, ficha clínica y agenda de atención. Ver `Propuesta_Asistente_Dental_Digital.docx` para el detalle completo de la propuesta.
+MVP en modo independiente (Fase 1) del asistente dental digital: odontograma, ficha clínica, agenda, periodontograma por voz y autenticación con roles. Ver `Propuesta_Asistente_Dental_Digital.docx` para el detalle completo de la propuesta.
+
+**En producción**:
+- Frontend: https://addi-frontend.vercel.app
+- Backend: https://backend-production-1d06.up.railway.app
 
 ## Estructura
 
@@ -53,6 +57,12 @@ docker buildx build --platform linux/amd64,linux/arm64 -t tu-usuario/addi-fronte
 **Variables de entorno relevantes** (`docker-compose.prod.yml`):
 - `NEXT_PUBLIC_API_URL` — URL del backend tal como la alcanza el **navegador** del usuario (se incrusta en el frontend al momento de compilar). Por defecto `http://localhost:3000`, correcto para correr todo en una sola máquina; para desplegar en un servidor hay que reconstruir el frontend con la URL pública real.
 - `DB_SYNCHRONIZE=true` — crea el esquema de base de datos automáticamente al arrancar. Es una solución de MVP/piloto porque el proyecto todavía no tiene un sistema de migraciones de TypeORM; antes de operar con datos clínicos reales hay que reemplazarlo por migraciones versionadas.
+
+## Autenticación
+
+Todas las rutas de la API requieren sesión (JWT), salvo `/auth/login`. Roles: `clinico`, `administrativo`, `auditor` — solo `administrativo` puede crear/listar usuarios (`/auth/usuarios`).
+
+Si la base de datos no tiene ningún usuario, el backend crea un administrador automáticamente al arrancar, usando `ADMIN_SEED_EMAIL`/`ADMIN_SEED_PASSWORD` (por defecto `admin@addi.cl` / `addi-admin-2026` — **cámbiala** después del primer login creando un nuevo usuario administrativo y dejando de usar esa cuenta semilla). Define `JWT_SECRET` con un valor propio largo y aleatorio antes de cualquier uso real.
 
 ## Módulos del backend (MVP)
 
