@@ -1,0 +1,51 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: addi
+      POSTGRES_PASSWORD: addi
+      POSTGRES_DB: addi
+    volumes:
+      - addi_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U addi"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: addi
+      DB_PASSWORD: addi
+      DB_NAME: addi
+      # MVP/piloto sin sistema de migraciones todavía: crea el esquema automáticamente.
+      # Antes de manejar datos clínicos reales, reemplazar por migraciones de TypeORM
+      # y quitar esta variable (o ponerla en "false").
+      DB_SYNCHRONIZE: "true"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3000}
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "3001:3000"
+
+volumes:
+  addi_postgres_data:

@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Paleta de la sonda periodontal por voz (calca sonda_periodontograma_voz.html, el POC previo). */
+.sonda-theme {
+  --sonda-bg: #f1f5f4;
+  --sonda-surface: #ffffff;
+  --sonda-surface-2: #f7faf9;
+  --sonda-ink: #122a2d;
+  --sonda-ink-soft: #587072;
+  --sonda-ink-faint: #8fa3a4;
+  --sonda-teal: #0e7c7b;
+  --sonda-teal-dark: #0a5d5c;
+  --sonda-teal-soft: #dff0ee;
+  --sonda-red: #c0392b;
+  --sonda-red-soft: #f8e1de;
+  --sonda-amber: #b0722c;
+  --sonda-amber-soft: #f5e8d6;
+  --sonda-border: #dce6e4;
+  --sonda-mono: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Consolas, monospace;
+  background: var(--sonda-bg);
+  color: var(--sonda-ink);
+}
+
+@keyframes sonda-pulse {
+  0% {
+    width: 88px;
+    height: 88px;
+    opacity: 0.55;
+  }
+  100% {
+    width: 150px;
+    height: 150px;
+    opacity: 0;
+  }
+}
+
+.sonda-ring {
+  position: absolute;
+  border-radius: 9999px;
+  border: 2px solid var(--sonda-red);
+  opacity: 0;
+  pointer-events: none;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.sonda-mic.listening .sonda-ring {
+  animation: sonda-pulse 1.8s ease-out infinite;
+}
+.sonda-mic.listening .sonda-ring.r2 {
+  animation-delay: 0.6s;
+}
+
+@media print {
+  .sonda-no-print {
+    display: none !important;
+  }
+}
