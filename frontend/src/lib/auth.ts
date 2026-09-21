@@ -31,11 +31,21 @@ export function obtenerToken(): string | null {
   }
 }
 
+// useSyncExternalStore exige que getSnapshot devuelva la MISMA referencia mientras los datos
+// no cambien; JSON.parse crea un objeto nuevo en cada llamada y provocaba un bucle infinito
+// de renders justo después de iniciar sesión. Se cachea según el texto guardado.
+let usuarioRawCache: string | null = null;
+let usuarioCache: UsuarioSesion | null = null;
+
 export function obtenerUsuario(): UsuarioSesion | null {
   if (typeof window === "undefined") return null;
   try {
     const raw = localStorage.getItem(USUARIO_KEY);
-    return raw ? (JSON.parse(raw) as UsuarioSesion) : null;
+    if (raw !== usuarioRawCache) {
+      usuarioRawCache = raw;
+      usuarioCache = raw ? (JSON.parse(raw) as UsuarioSesion) : null;
+    }
+    return usuarioCache;
   } catch {
     return null;
   }
